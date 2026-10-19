@@ -22,6 +22,31 @@ app.get('/todo', (req, res) => {
   res.json(todos);
 });
 
+// 할일 수정 (PUT)
+app.put('/todo/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const { text } = req.body;
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.text = text;
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ success: false, message: 'Todo not found' });
+    }
+});
+
+// 할일 삭제 (DELETE)
+app.delete('/todo/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const index = todos.findIndex(t => t.id === id);
+    if (index !== -1) {
+        todos.splice(index, 1);
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ success: false, message: 'Todo not found' });
+    }
+});
+
 app.post('/todo', (req, res) => {
   const text = (req.body.text || '').trim();
   if (text) todos.push({ id: nextId++, text });
